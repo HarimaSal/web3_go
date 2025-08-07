@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	/* 数字 */
@@ -16,6 +18,13 @@ func main() {
 	fmt.Println("------最长公共前缀")
 	//task5()
 	/* 基本值类型 */
+	fmt.Println("------大整数加1")
+	//task6()
+	/* 引用类型 */
+	fmt.Println("------删除有序数组中的重复项")
+	task7()
+	fmt.Println("------合并区间")
+	task8()
 }
 
 /* 两数之和
@@ -99,37 +108,87 @@ func task3() {
 /*有效的括号*/
 func task4() {
 	res := func(s string) bool {
-		splitStr := []rune(s)
-		if len(splitStr)%2 != 0 {
-			return false
+		// 创建一个映射，存储括号的对应关系
+		pairs := map[rune]rune{
+			'(': ')',
+			'[': ']',
+			'{': '}',
 		}
-		stack := map[rune]rune{
-			')': '(',
-			']': '[',
-			'}': '{',
-		}
-		k := 0
-		for _, char := range splitStr {
-			if char == '(' || char == '[' || char == '{' {
-				k++
-				continue
-			}
-			if k > 0 && splitStr[k-1] == stack[char] { // ([]{})
-				k--
+
+		var stack []rune
+
+		for _, char := range s {
+			if closing, isOpen := pairs[char]; isOpen {
+				stack = append(stack, closing)
 			} else {
-				return false
+				if len(stack) == 0 || stack[len(stack)-1] != char {
+					return false
+				}
+				stack = stack[:len(stack)-1]
 			}
 		}
-		return true
+
+		return len(stack) == 0
 	}
 	fmt.Println(res("()"))
 	fmt.Println(res("([)"))
 	fmt.Println(res("([)]"))
-	fmt.Println(res("([]){}"))
+	fmt.Println(res("([4566]){}"))
 	fmt.Println(res("([]{}[])"))
 }
 
 /*最长公共前缀*/
 func task5() {
+	longestCommonPrefix := func(strs []string) string {
+		cmpStr := strs[0]
+		for i := range cmpStr {
+			for _, v := range strs {
+				if i == len(v) || cmpStr[i] != v[i] { // 前面的条件是为了防止索引越界，后面的条件是为了截取相同字符
+					return cmpStr[:i]
+				}
+			}
+		}
+		return cmpStr
+	}
+	fmt.Println(longestCommonPrefix([]string{"flower", "flow", "flight"}))
+	fmt.Println(longestCommonPrefix([]string{"flower", "flow", "fool"}))
+	fmt.Println(longestCommonPrefix([]string{"ab", "a"}))
+}
+
+/* 大整数加1.不可转为整数，然后加1，这样会引发位数越界 */
+func task6() {
+	addOne := func(digits []int) []int {
+		var res []int
+		for i := len(digits) - 1; i >= 0; i-- {
+			if digits[i] == 9 {
+				digits[i] = 0
+				res = append(res, digits[i])
+			} else {
+				digits[i]++
+				return digits
+			}
+		}
+		if len(res) != 0 {
+			res = append([]int{1}, res...)
+		}
+		return res
+	}
+	fmt.Println(addOne([]int{1, 2, 3}))
+	fmt.Println(addOne([]int{9, 9, 9}))
+	fmt.Println(addOne([]int{7, 9, 6}))
+	fmt.Println(addOne([]int{7, 2, 8, 5, 0, 9, 1, 2, 9, 5, 3, 6, 6, 7, 3, 2, 8, 4, 3, 7, 9, 5, 7, 7, 4, 7, 4, 9, 4, 7, 0, 1, 1, 1, 7, 4, 0, 0, 6}))
+}
+
+/* 删除有序数组中的重复项 */
+func task7() {
+	//removeDuplicates := func(nums []int) int {
+	//
+	//}
+	//fmt.Println(removeDuplicates([]int{1, 1, 2}))
+	//fmt.Println(removeDuplicates([]int{0,0,1,1,1,2,2,3,3,4}))
+}
+
+/* 合并区间 */
+func task8() {
 
 }
