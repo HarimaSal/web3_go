@@ -2,24 +2,25 @@ package main
 
 import (
 	"fmt"
+	"sort"
 )
 
 func main() {
 	/* 数字 */
 	fmt.Println("------两数之和")
-	//task1()
+	task1()
 	fmt.Println("------只出现一次的数字")
-	//task2()
+	task2()
 	fmt.Println("------回文数")
-	//task3()
+	task3()
 	/*  字符串 */
 	fmt.Println("------有效的括号")
-	//task4()
+	task4()
 	fmt.Println("------最长公共前缀")
-	//task5()
+	task5()
 	/* 基本值类型 */
 	fmt.Println("------大整数加1")
-	//task6()
+	task6()
 	/* 引用类型 */
 	fmt.Println("------删除有序数组中的重复项")
 	task7()
@@ -181,14 +182,50 @@ func task6() {
 
 /* 删除有序数组中的重复项 */
 func task7() {
-	//removeDuplicates := func(nums []int) int {
-	//
-	//}
-	//fmt.Println(removeDuplicates([]int{1, 1, 2}))
-	//fmt.Println(removeDuplicates([]int{0,0,1,1,1,2,2,3,3,4}))
+	removeDuplicates := func(nums []int) int {
+		j := 0
+		for _, v := range nums {
+			if v != nums[j] {
+				j++
+				nums[j] = v
+			}
+		}
+		return j + 1
+	}
+	fmt.Println(removeDuplicates([]int{1, 1, 2}))
+	fmt.Println(removeDuplicates([]int{0, 0, 1, 1, 1, 2, 2, 3, 3, 4}))
 }
 
 /* 合并区间 */
 func task8() {
+	merge := func(intervals [][]int) [][]int {
+		var resArr [][]int
+		if len(intervals) <= 1 {
+			return intervals
+		}
+		// 按第一列升序
+		sort.Slice(intervals, func(i, j int) bool {
+			return intervals[i][0] < intervals[j][0]
+		})
 
+		for i := 0; i < len(intervals); i++ {
+			left := intervals[i][0]
+			right := intervals[i][1]
+			if resArr == nil || resArr[len(resArr)-1][1] < left {
+				resArr = append(resArr, []int{left, right})
+			} else {
+				// 右区间始终取最大值
+				resArr[len(resArr)-1][1] = max(resArr[len(resArr)-1][1], right)
+			}
+		}
+		return resArr
+	}
+
+	fmt.Println(merge([][]int{{1, 3}, {2, 6}, {8, 10}, {15, 18}}))
+	fmt.Println(merge([][]int{{1, 7}, {2, 6}, {8, 10}, {15, 18}}))
+	fmt.Println(merge([][]int{{1, 4}, {4, 6}}))
+	fmt.Println(merge([][]int{{1, 4}, {1, 4}}))
+	fmt.Println(merge([][]int{{1, 4}, {5, 6}}))
+	fmt.Println(merge([][]int{{1, 4}, {5, 8}, {5, 7}}))
+	fmt.Println(merge([][]int{{1, 4}, {5, 8}, {5, 8}, {5, 7}}))
 }
